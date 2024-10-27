@@ -7,5 +7,6 @@ export const ROUTES = {
 } as const;
 
 export const USER_AUTHENTICATION_ROUTES = {
-  SIGN_IN: 'signIn'
+  SIGN_IN: 'signIn',
+  REGISTER: 'register'
 } as const;

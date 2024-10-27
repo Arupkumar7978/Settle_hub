@@ -1,3 +1,9 @@
+/**
+ * Represents a User entity with necessary user information.
+ *
+ * @author arup.padhi
+ */
+
 import { DataTypes, Model, Sequelize } from 'sequelize';
 
 export interface DefineEntity {
@@ -8,6 +14,7 @@ export default class UserEntity extends Model {
   declare id: number;
   declare userUUID: string | undefined;
   declare name: string;
+  declare email: string;
   declare userName: string;
   declare password: string;
 }
@@ -30,28 +37,23 @@ export class UserEntityDefination implements DefineEntity {
         },
         userUUID: {
           type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
-          unique: true
+          defaultValue: DataTypes.UUIDV4
         },
         name: {
           type: new DataTypes.STRING(128),
           allowNull: false
         },
+        email: {
+          type: new DataTypes.STRING(128),
+          allowNull: false
+        },
         userName: {
           type: DataTypes.STRING(64),
-          allowNull: false,
-          unique: true,
-          validate: {
-            len: [5, 10]
-          }
-          
+          allowNull: false
         },
         password: {
-          type: DataTypes.STRING(64),
-          allowNull: false,
-          validate: {
-            len: [5, 10]
-          }
+          type: DataTypes.STRING(128),
+          allowNull: false
         }
       },
       {

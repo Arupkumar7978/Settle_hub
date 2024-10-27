@@ -2,11 +2,11 @@ import { Sequelize } from 'sequelize';
 import UserEntity, { UserEntityDefination } from './userModel';
 import { ENTITY_CONSTANTS } from '../constants/entityConstants';
 
-interface EntityType {
+export type BeanType = {
   [ENTITY_CONSTANTS.USER]: typeof UserEntity;
-}
+};
 
-const ENTITY_OBJECT: { [K in keyof EntityType]: EntityType[K] } = {
+const ENTITY_OBJECT: { [K in keyof BeanType]: BeanType[K] } = {
   USER: UserEntity
 };
 
@@ -23,9 +23,7 @@ export class InjectSequelizeDependency {
 }
 
 export class BeanProvider {
-  public getBean<T extends keyof EntityType>(
-    entity: T
-  ): EntityType[T] {
+  public getBean<T extends keyof BeanType>(entity: T): BeanType[T] {
     return ENTITY_OBJECT[entity];
   }
 }

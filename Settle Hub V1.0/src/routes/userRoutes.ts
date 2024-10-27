@@ -3,13 +3,17 @@ import {
   AUTHENTICATION,
   USER_AUTHENTICATION_ROUTES
 } from '../constants/routesConstant';
+import {
+  AuthenticateUser,
+  CreateNewUser
+} from '../services/userService';
 
 const router = Router();
 
-const { SIGN_IN } = USER_AUTHENTICATION_ROUTES;
+const { SIGN_IN, REGISTER } = USER_AUTHENTICATION_ROUTES;
 
-router.get(`/${AUTHENTICATION}/${SIGN_IN}`, (req, res) => {
-  res.send('Authentication Successfull.');
-});
+router.get(`/${AUTHENTICATION}/${SIGN_IN}`, AuthenticateUser);
+
+router.post(`/${AUTHENTICATION}/${REGISTER}`, CreateNewUser);
 
 export default router;
