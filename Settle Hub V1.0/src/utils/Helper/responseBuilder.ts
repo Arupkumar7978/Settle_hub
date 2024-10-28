@@ -1,21 +1,21 @@
 export class ResponseBuilder {
-  public buildSuccessResponse(
-    data: any,
-    message: any,
-    success: any,
-    statusCode: any
-  ) {
+  private success: boolean;
+  private data: any;
+  private message: string;
+  private statusCode: number;
+
+  public buildSuccessResponse(data, message, success, statusCode) {
     return { response: { data, message, success, statusCode } };
   }
   public buildFailureResponse(
-    data: any,
-    message: any,
-    success: any,
-    statusCode: any,
-    errorMessage = ""
+    data,
+    message,
+    success,
+    statusCode,
+    errorMessage = ''
   ) {
     return {
-      response: { data, message, success, statusCode, errorMessage },
+      response: { data, message, success, statusCode, errorMessage }
     };
   }
 }
