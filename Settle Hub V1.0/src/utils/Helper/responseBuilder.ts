@@ -1,21 +1,21 @@
 export class ResponseBuilder {
-  private success: boolean;
-  private data: any;
-  private message: string;
-  private statusCode: number;
-
-  public buildSuccessResponse(data, message, success, statusCode) {
+  public buildSuccessResponse(
+    data: { user: any; token: string },
+    message: string,
+    success: boolean,
+    statusCode: number
+  ) {
     return { response: { data, message, success, statusCode } };
   }
   public buildFailureResponse(
-    data,
-    message,
-    success,
-    statusCode,
-    errorMessage = ''
+    data: { user: any } | null,
+    message: string,
+    success: boolean,
+    statusCode: number,
+    errorMessage = ""
   ) {
     return {
-      response: { data, message, success, statusCode, errorMessage }
+      response: { data, message, success, statusCode, errorMessage },
     };
   }
 }

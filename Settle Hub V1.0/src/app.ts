@@ -1,15 +1,12 @@
-import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import bodyParser from 'body-parser';
-import DatabaseConnector from './config/database';
-import { Sequelize } from 'sequelize';
-import { InjectSequelizeDependency } from './models';
-import GenericRouter from './routes/index';
-import {
-  API_ENDPOINT,
-  API_VERSION
-} from './constants/routesConstant';
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import bodyParser from "body-parser";
+import DatabaseConnector from "./config/database";
+import { Sequelize } from "sequelize";
+import { InjectSequelizeDependency } from "./models";
+import GenericRouter from "./routes/index";
+import { API_ENDPOINT, API_VERSION } from "./constants/routesConstant";
 
 interface ServerSetup {
   setupMiddlewares(): void;
@@ -20,7 +17,7 @@ interface ServerSetup {
 
 class App implements ServerSetup {
   public app = express();
-  private sequelizeInstance: Sequelize;
+  private sequelizeInstance: Sequelize = new Sequelize();
 
   constructor() {
     this.setupMiddlewares();
