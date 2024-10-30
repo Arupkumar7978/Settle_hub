@@ -1,12 +1,18 @@
-import express from "express";
-import cors from "cors";
-import helmet from "helmet";
-import bodyParser from "body-parser";
-import DatabaseConnector from "./config/database";
-import { Sequelize } from "sequelize";
-import { InjectSequelizeDependency } from "./models";
-import GenericRouter from "./routes/index";
-import { API_ENDPOINT, API_VERSION } from "./constants/routesConstant";
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import bodyParser from 'body-parser';
+import DatabaseConnector from './config/database';
+import { Sequelize } from 'sequelize';
+import { InjectSequelizeDependency } from './models';
+import GenericRouter from './routes/index';
+import {
+  API_ENDPOINT,
+  API_VERSION
+} from './constants/routesConstant';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 interface ServerSetup {
   setupMiddlewares(): void;
@@ -17,7 +23,15 @@ interface ServerSetup {
 
 class App implements ServerSetup {
   public app = express();
-  private sequelizeInstance: Sequelize = new Sequelize();
+  private sequelizeInstance: Sequelize = new Sequelize(
+    process.env.DB_NAME || '',
+    process.env.DB_USER || '',
+    process.env.DB_PASSWORD || '',
+    {
+      host: process.env.DB_HOST || '',
+      dialect: 'mysql'
+    }
+  );
 
   constructor() {
     this.setupMiddlewares();
@@ -33,7 +47,7 @@ class App implements ServerSetup {
   }
   initiateDatabaseConnection(): void {
     const connector = new DatabaseConnector();
-    this.sequelizeInstance = connector.connect();
+    // this.sequelizeInstance = connector.connect();
     // performs the necessary changes in the table to make it match the model.
     this.sequelizeInstance.sync({ alter: true });
   }
