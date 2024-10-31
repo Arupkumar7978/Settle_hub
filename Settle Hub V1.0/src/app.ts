@@ -56,7 +56,7 @@ class App implements ServerSetup {
     // performs the necessary changes in the table to make it match the model.
     if (this.sequelizeInstance) {
       initiateDatabaseConnection(this.sequelizeInstance);
-      this.sequelizeInstance.sync({ alter: true });
+      // this.sequelizeInstance.sync({ alter: true });
     }
   }
   injectDependency(): void {

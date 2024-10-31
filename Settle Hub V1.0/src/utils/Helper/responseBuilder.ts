@@ -2,7 +2,7 @@
 
 export class ResponseBuilder {
   public buildSuccessResponse(
-    data: { user: any; token: string },
+    data: any,
     message: string,
     success: boolean,
     statusCode: number
@@ -10,14 +10,14 @@ export class ResponseBuilder {
     return { response: { data, message, success, statusCode } };
   }
   public buildFailureResponse(
-    data: { user: any } | null,
+    data: any,
     message: string,
     success: boolean,
     statusCode: number,
-    errorMessage = ""
+    errorMessage = ''
   ) {
     return {
-      response: { data, message, success, statusCode, errorMessage },
+      response: { data, message, success, statusCode, errorMessage }
     };
   }
 }

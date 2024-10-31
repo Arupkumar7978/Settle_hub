@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 
 interface DatabaseSequelizer {
   connect(): Sequelize;
+  getInstance(): Sequelize;
 }
 
 // Load .env properties
@@ -28,6 +29,13 @@ export default class DatabaseConnector implements DatabaseSequelizer {
         dialect: this.DB_DIALECT
       }
     );
+    return this.sequelizeInstance;
+  }
+
+  getInstance(): Sequelize {
+    if (!this.sequelizeInstance) {
+      return this.connect();
+    }
     return this.sequelizeInstance;
   }
 }

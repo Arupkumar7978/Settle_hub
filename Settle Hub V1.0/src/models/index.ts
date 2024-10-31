@@ -1,13 +1,18 @@
 import { Sequelize } from 'sequelize';
 import UserEntity, { UserEntityDefination } from './userModel';
-import { ENTITY_CONSTANTS } from '../constants/entityConstants';
+import { MODEL_CONSTANTS } from '../constants/entityConstants';
+import TransactionsModel, {
+  TransactionsModelDefination
+} from './transactionsModel';
 
 export type BeanType = {
-  [ENTITY_CONSTANTS.USER]: typeof UserEntity;
+  [MODEL_CONSTANTS.USER]: typeof UserEntity;
+  [MODEL_CONSTANTS.TRANSACTIONS]: typeof TransactionsModel;
 };
 
 const ENTITY_OBJECT: { [K in keyof BeanType]: BeanType[K] } = {
-  USER: UserEntity
+  USER: UserEntity,
+  TRANSACTIONS: TransactionsModel
 };
 
 export class InjectSequelizeDependency {
@@ -19,7 +24,8 @@ export class InjectSequelizeDependency {
 
   inject(): void {
     new UserEntityDefination(this.sequelizeInstance).define();
-  } 
+    new TransactionsModelDefination(this.sequelizeInstance).define();
+  }
 }
 
 export class BeanProvider {

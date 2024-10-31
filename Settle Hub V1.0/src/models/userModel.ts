@@ -5,13 +5,10 @@
  */
 
 import { DataTypes, Model, Sequelize } from 'sequelize';
-
-export interface DefineEntity {
-  define(): void;
-}
+import { DefineEntity } from './types';
 
 export default class UserEntity extends Model {
-  declare id: number;
+  declare pkUserId: number;
   declare userUUID: string | undefined;
   declare name: string;
   declare email: string;
@@ -29,7 +26,7 @@ export class UserEntityDefination implements DefineEntity {
   define(): void {
     UserEntity.init(
       {
-        id: {
+        pkUserId: {
           type: DataTypes.INTEGER.UNSIGNED,
           autoIncrement: true,
           primaryKey: true,
@@ -67,7 +64,7 @@ export class UserEntityDefination implements DefineEntity {
       {
         tableName: 'users',
         sequelize: this.sequelizeInstance,
-        indexes: [{ unique: true, fields: ['id'] }]
+        indexes: [{ unique: true, fields: ['pkUserId'] }]
       }
     );
   }

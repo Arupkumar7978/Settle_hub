@@ -1,1 +1,6 @@
-export const ENTITY_CONSTANTS = { USER: 'USER' } as const;
+const CONSTANTS = {
+  USER: 'USER',
+  TRANSACTIONS: 'TRANSACTIONS'
+} as const;
+
+export const MODEL_CONSTANTS = Object.freeze(CONSTANTS);

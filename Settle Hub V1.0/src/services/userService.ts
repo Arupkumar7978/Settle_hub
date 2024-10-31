@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import JWT from 'jsonwebtoken';
 import { BeanProvider, BeanType } from '../models';
-import { ENTITY_CONSTANTS } from '../constants/entityConstants';
+import { MODEL_CONSTANTS } from '../constants/entityConstants';
 import { ResponseBuilder } from '../utils/Helper/responseBuilder';
 import bcrypt from 'bcrypt';
 import {
@@ -22,7 +22,7 @@ const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
 const PASSWORD_SALT =
   parseInt(process.env.PASSWORD_SALT ?? '10') || 10;
 
-const { USER } = ENTITY_CONSTANTS;
+const { USER } = MODEL_CONSTANTS;
 
 const responseBuilder = new ResponseBuilder();
 
