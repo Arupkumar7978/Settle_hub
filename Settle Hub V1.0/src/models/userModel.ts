@@ -54,6 +54,14 @@ export class UserEntityDefination implements DefineEntity {
         password: {
           type: DataTypes.STRING(128),
           allowNull: false
+        },
+        defaultCurrency: {
+          type: DataTypes.STRING(32),
+          defaultValue: 'INR'
+        },
+        isDeleted: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          defaultValue: 0
         }
       },
       {

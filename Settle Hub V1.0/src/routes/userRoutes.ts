@@ -12,7 +12,7 @@ const router = Router();
 
 const { SIGN_IN, REGISTER } = USER_AUTHENTICATION_ROUTES;
 
-router.get(`/${AUTHENTICATION}/${SIGN_IN}`, AuthenticateUser);
+router.post(`/${AUTHENTICATION}/${SIGN_IN}`, AuthenticateUser);
 
 router.post(`/${AUTHENTICATION}/${REGISTER}`, CreateNewUser);
 

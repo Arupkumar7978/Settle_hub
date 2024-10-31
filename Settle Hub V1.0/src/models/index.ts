@@ -19,7 +19,7 @@ export class InjectSequelizeDependency {
 
   inject(): void {
     new UserEntityDefination(this.sequelizeInstance).define();
-  }
+  } 
 }
 
 export class BeanProvider {

@@ -21,17 +21,22 @@ interface ServerSetup {
   injectDependency(): void;
 }
 
+async function initiateDatabaseConnection(
+  sequelizeInstance: Sequelize
+) {
+  try {
+    await sequelizeInstance.authenticate();
+    console.log(
+      'Database Connection has been established successfully.'
+    );
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+}
+
 class App implements ServerSetup {
   public app = express();
-  private sequelizeInstance: Sequelize = new Sequelize(
-    process.env.DB_NAME || '',
-    process.env.DB_USER || '',
-    process.env.DB_PASSWORD || '',
-    {
-      host: process.env.DB_HOST || '',
-      dialect: 'mysql'
-    }
-  );
+  private sequelizeInstance?: Sequelize;
 
   constructor() {
     this.setupMiddlewares();
@@ -47,12 +52,17 @@ class App implements ServerSetup {
   }
   initiateDatabaseConnection(): void {
     const connector = new DatabaseConnector();
-    // this.sequelizeInstance = connector.connect();
+    this.sequelizeInstance = connector.connect();
     // performs the necessary changes in the table to make it match the model.
-    this.sequelizeInstance.sync({ alter: true });
+    if (this.sequelizeInstance) {
+      initiateDatabaseConnection(this.sequelizeInstance);
+      this.sequelizeInstance.sync({ alter: true });
+    }
   }
   injectDependency(): void {
-    new InjectSequelizeDependency(this.sequelizeInstance).inject();
+    if (this.sequelizeInstance) {
+      new InjectSequelizeDependency(this.sequelizeInstance).inject();
+    }
   }
 
   setupRoutes(): void {

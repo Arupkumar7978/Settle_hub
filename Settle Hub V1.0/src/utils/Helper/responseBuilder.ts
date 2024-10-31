@@ -1,3 +1,5 @@
+// TODO : Merge both methods and expose single generic ResponseEntity function .
+
 export class ResponseBuilder {
   public buildSuccessResponse(
     data: { user: any; token: string },
