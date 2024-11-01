@@ -2,7 +2,6 @@ import { Sequelize, Dialect } from 'sequelize';
 import dotenv from 'dotenv';
 
 interface DatabaseSequelizer {
-  connect(): Sequelize;
   getInstance(): Sequelize;
 }
 
@@ -19,7 +18,7 @@ export default class DatabaseConnector implements DatabaseSequelizer {
 
   private sequelizeInstance: Sequelize | undefined;
 
-  connect(): Sequelize {
+  private connect(): Sequelize {
     this.sequelizeInstance = new Sequelize(
       this.DB_NAME,
       this.DB_USER,

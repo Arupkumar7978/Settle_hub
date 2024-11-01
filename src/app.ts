@@ -51,12 +51,12 @@ class App implements ServerSetup {
     this.app.use(bodyParser.json());
   }
   initiateDatabaseConnection(): void {
-    const connector = new DatabaseConnector();
-    this.sequelizeInstance = connector.connect();
+    const dbConnector = new DatabaseConnector();
+    this.sequelizeInstance = dbConnector.getInstance();
     // performs the necessary changes in the table to make it match the model.
     if (this.sequelizeInstance) {
       initiateDatabaseConnection(this.sequelizeInstance);
-      // this.sequelizeInstance.sync({ alter: true });
+      this.sequelizeInstance.sync({ alter: true });
     }
   }
   injectDependency(): void {
