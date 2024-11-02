@@ -7,7 +7,7 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { DefineEntity } from './types';
 
-export default class UserEntity extends Model {
+export default class UserModel extends Model {
   declare pkUserId: number;
   declare userUUID: string | undefined;
   declare name: string;
@@ -16,7 +16,7 @@ export default class UserEntity extends Model {
   declare password: string;
 }
 
-export class UserEntityDefination implements DefineEntity {
+export class UserModelDefination implements DefineEntity {
   private sequelizeInstance: Sequelize;
 
   constructor(instance: Sequelize) {
@@ -24,7 +24,7 @@ export class UserEntityDefination implements DefineEntity {
   }
 
   define(): void {
-    UserEntity.init(
+    UserModel.init(
       {
         pkUserId: {
           type: DataTypes.INTEGER.UNSIGNED,

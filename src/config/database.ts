@@ -16,10 +16,10 @@ export default class DatabaseConnector implements DatabaseSequelizer {
   private DB_DIALECT: Dialect =
     (process.env.DB_DIALECT as Dialect) || 'mysql';
 
-  private sequelizeInstance: Sequelize | undefined;
+  private static sequelizeInstance: Sequelize | undefined;
 
   private connect(): Sequelize {
-    this.sequelizeInstance = new Sequelize(
+    DatabaseConnector.sequelizeInstance = new Sequelize(
       this.DB_NAME,
       this.DB_USER,
       this.DB_PASSWORD,
@@ -28,13 +28,13 @@ export default class DatabaseConnector implements DatabaseSequelizer {
         dialect: this.DB_DIALECT
       }
     );
-    return this.sequelizeInstance;
+    return DatabaseConnector.sequelizeInstance;
   }
 
   getInstance(): Sequelize {
-    if (!this.sequelizeInstance) {
+    if (!DatabaseConnector.sequelizeInstance) {
       return this.connect();
     }
-    return this.sequelizeInstance;
+    return DatabaseConnector.sequelizeInstance;
   }
 }

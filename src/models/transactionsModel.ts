@@ -6,6 +6,8 @@
 
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { DefineEntity } from './types';
+import { ModelProvider } from '../helper/modelProvider';
+import { MODEL_CONSTANTS } from '../constants/entityConstants';
 
 export default class TransactionsModel extends Model {
   declare pkTransactionId: number;
@@ -33,7 +35,11 @@ export class TransactionsModelDefination implements DefineEntity {
         },
         payerId: {
           type: DataTypes.INTEGER.UNSIGNED,
-          allowNull: true
+          allowNull: true,
+          references: {
+            model: new ModelProvider().getModel(MODEL_CONSTANTS.USER),
+            key: 'pkUserId'
+          }
         },
         name: {
           type: new DataTypes.STRING(64),

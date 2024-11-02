@@ -61,7 +61,11 @@ class App implements ServerSetup {
   }
   injectDependency(): void {
     if (this.sequelizeInstance) {
-      new InjectSequelizeDependency(this.sequelizeInstance).inject();
+      const injector = new InjectSequelizeDependency(
+        this.sequelizeInstance
+      );
+      injector.inject();
+      // injector.defineAssosiations();
     }
   }
 

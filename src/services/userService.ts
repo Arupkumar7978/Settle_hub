@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import JWT from 'jsonwebtoken';
-import { BeanProvider, BeanType } from '../models';
 import { MODEL_CONSTANTS } from '../constants/entityConstants';
-import { ResponseBuilder } from '../utils/Helper/responseBuilder';
+import { ResponseBuilder } from '../helper/responseBuilder';
 import bcrypt from 'bcrypt';
 import {
   USER_EXITS,
@@ -13,6 +12,8 @@ import {
   USER_LOGGEDIN
 } from '../constants/responseConstants';
 import dotenv from 'dotenv';
+import { ModelType } from '../models/types';
+import { ModelProvider } from '../helper/modelProvider';
 
 // Load .env properties
 dotenv.config();
@@ -26,14 +27,13 @@ const { USER } = MODEL_CONSTANTS;
 
 const responseBuilder = new ResponseBuilder();
 
-const userBean: BeanType[typeof USER] = new BeanProvider().getBean(
-  USER
-);
+const userModel: ModelType[typeof USER] =
+  new ModelProvider().getModel(USER);
 
 export async function AuthenticateUser(req: Request, res: Response) {
   try {
     const { email, password } = req.body;
-    const user = await userBean.findOne({ where: { email } });
+    const user = await userModel.findOne({ where: { email } });
     if (!user) {
       res
         .status(404)
@@ -100,7 +100,7 @@ export async function CreateNewUser(req: Request, res: Response) {
     const salt = bcrypt.genSaltSync(PASSWORD_SALT);
     const encrypted_password = bcrypt.hashSync(password, salt);
 
-    const [user, created] = await userBean.findOrCreate({
+    const [user, created] = await userModel.findOrCreate({
       where: { email },
       defaults: {
         name,
