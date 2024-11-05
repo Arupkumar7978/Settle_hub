@@ -17,6 +17,7 @@ export default class DebtsModel extends Model {
   declare amountOwed: number;
   declare fkTransactionId: number;
   declare isSettled: boolean;
+  declare isDeleted: boolean;
 }
 
 export class DebtsModelDefination implements DefineEntity {
@@ -64,7 +65,10 @@ export class DebtsModelDefination implements DefineEntity {
         },
         isSettled: {
           type: DataTypes.BOOLEAN,
-          allowNull: false,
+          defaultValue: false
+        },
+        isDeleted: {
+          type: DataTypes.BOOLEAN,
           defaultValue: false
         }
       },

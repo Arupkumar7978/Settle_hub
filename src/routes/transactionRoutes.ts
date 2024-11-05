@@ -14,6 +14,6 @@ router.post(`/${CREATE}`, createTransaction);
 
 router.put(`/${UPDATE}`, updateTrasnaction);
 
-router.delete(`/${DELETE}`, deleteTransaction);
+router.delete(`/${DELETE}/:transactionId`, deleteTransaction);
 
 export default router;

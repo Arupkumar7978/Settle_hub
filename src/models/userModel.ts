@@ -57,8 +57,8 @@ export class UserModelDefination implements DefineEntity {
           defaultValue: 'INR'
         },
         isDeleted: {
-          type: DataTypes.INTEGER.UNSIGNED,
-          defaultValue: 0
+          type: DataTypes.BOOLEAN,
+          defaultValue: false
         }
       },
       {

@@ -15,6 +15,7 @@ export default class TransactionsModel extends Model {
   declare name: string;
   declare totalAmount: number;
   declare description: string;
+  declare isDeleted: boolean;
 }
 
 export class TransactionsModelDefination implements DefineEntity {
@@ -52,6 +53,10 @@ export class TransactionsModelDefination implements DefineEntity {
         totalAmount: {
           type: new DataTypes.DECIMAL(),
           allowNull: false
+        },
+        isDeleted: {
+          type: DataTypes.BOOLEAN,
+          defaultValue: false
         }
       },
       {

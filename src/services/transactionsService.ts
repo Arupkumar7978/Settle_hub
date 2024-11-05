@@ -74,5 +74,28 @@ export async function createTransaction(req: Request, res: Response) {
       );
   }
 }
-export async function updateTrasnaction() {}
-export async function deleteTransaction() {}
+export async function updateTrasnaction(
+  req: Request,
+  res: Response
+) {}
+export async function deleteTransaction(req: Request, res: Response) {
+  try {
+    const { transactionId } = req.params;
+    if (!transactionId)
+      throw new Error(`TransactionId is : ${transactionId}`);
+
+    
+  } catch (error) {
+    console.error('ERROR [METHOD :: deleteTransaction]:', error);
+    res
+      .status(200)
+      .json(
+        responseBuilder.buildSuccessResponse(
+          [],
+          MESSAGE.INTERNAL_SERVER_ERROR,
+          true,
+          500
+        )
+      );
+  }
+}
