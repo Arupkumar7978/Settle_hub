@@ -3,7 +3,7 @@ import { USER_TRSANSACTION_ROUTES } from '../constants/routesConstant';
 import {
   createTransaction,
   deleteTransaction,
-  updateTrasnaction
+  updateTransaction,
 } from '../services/transactionsService';
 
 const router = Router();
@@ -12,7 +12,7 @@ const { CREATE, UPDATE, DELETE } = USER_TRSANSACTION_ROUTES;
 
 router.post(`/${CREATE}`, createTransaction);
 
-router.put(`/${UPDATE}`, updateTrasnaction);
+router.put(`/${UPDATE}`, updateTransaction);
 
 router.delete(`/${DELETE}/:transactionId`, deleteTransaction);
 

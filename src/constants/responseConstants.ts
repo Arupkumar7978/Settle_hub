@@ -10,8 +10,13 @@ export const PASSWORD_MISMATCH = `Please enter the correct password.`;
 // TRANSACTION
 export const TRANSACTION_CREATE_SUCCESS =
   'Transaction created successfully.';
-
-
+export const TRANSACTION_UPDATE_SUCCESS = 
+  'Transaction updated successfully.'
+export const TRANSACTION_NOT_FOUND = 
+  'Transaction Not Found.'
 
 // ERROR
 export const INTERNAL_SERVER_ERROR = `Internal server error.`;
+
+// INVALID ARGUMENTS
+export const INVALID_ARGUMENTS = `Passed payload is invalid.`;
