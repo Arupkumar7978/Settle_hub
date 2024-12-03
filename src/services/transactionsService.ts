@@ -77,6 +77,7 @@ export async function updateTransaction(req: Request, res: Response) {
   try {
     const { transactionId, payerId, totalAmount, description, name, debts } =
       req.body;
+
     // Input validation
     if (
       !transactionId ||
@@ -84,7 +85,7 @@ export async function updateTransaction(req: Request, res: Response) {
       totalAmount <= 0 ||
       !Array.isArray(debts)
     ) {
-      return res
+      res
         .status(400)
         .json(
           responseBuilder.buildFailureResponse(
@@ -94,12 +95,12 @@ export async function updateTransaction(req: Request, res: Response) {
             400
           )
         );
+      return;
     }
 
     const updatedTransaction = await dbConnector
       .getInstance()
       .transaction(async (t) => {
-        // Update the transaction record
         const [rowsUpdated] = await TransactionsModel.update(
           {
             payerId,
@@ -116,13 +117,11 @@ export async function updateTransaction(req: Request, res: Response) {
           );
         }
 
-        // Remove existing debts for this transaction
         await debtModel.destroy({
           where: { fkTransactionId: transactionId },
           transaction: t,
         });
 
-        // Insert the new debts
         const bulkDebts = debts.map((debt: typeof debtModel) => ({
           ...debt,
           creditorId: payerId,
@@ -133,7 +132,6 @@ export async function updateTransaction(req: Request, res: Response) {
           await debtModel.bulkCreate(bulkDebts, { transaction: t });
         }
 
-        // Fetch and return the updated transaction
         const transaction = await TransactionsModel.findByPk(transactionId, {
           transaction: t,
         });
@@ -142,10 +140,9 @@ export async function updateTransaction(req: Request, res: Response) {
           throw new Error("Transaction not found after update.");
         }
 
-        return transaction; // TypeScript now knows this can't be null.
+        return transaction;
       });
 
-    // Send success response
     res
       .status(200)
       .json(
@@ -172,11 +169,38 @@ export async function updateTransaction(req: Request, res: Response) {
   }
 }
 
-
 export async function deleteTransaction(req: Request, res: Response) {
   try {
     const { transactionId } = req.params;
     if (!transactionId) throw new Error(`TransactionId is : ${transactionId}`);
+
+    // Delete associated debts
+    const deletedDebtsCount = await debtModel.destroy({
+      where: { fkTransactionId: transactionId },
+    });
+    console.log(`Deleted ${deletedDebtsCount} debts for transaction ID: ${transactionId}`);
+
+    const deletedCount = await TransactionsModel.destroy({
+      where: { pkTransactionId: transactionId },
+    });
+
+    if (!deletedCount) {
+       res.status(404).json({
+        success: false,
+        message: 'Transaction not found.',
+        data: [],
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Transaction deleted successfully.',
+      data: [],
+    });
+
+    return;
+
   } catch (error) {
     console.error("ERROR [METHOD :: deleteTransaction]:", error);
     res
