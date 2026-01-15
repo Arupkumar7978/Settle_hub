@@ -4,7 +4,7 @@ import helmet from "helmet";
 import bodyParser from "body-parser";
 import DatabaseConnector from "./config/database";
 import { Sequelize } from "sequelize";
-import { InjectSequelizeDependency } from "./models";
+import { SequelizeDependencyInjector } from "./models";
 import GenericRouter from "./routes/index";
 import { API_ENDPOINT, API_VERSION } from "./constants/routesConstant";
 import dotenv from "dotenv";
@@ -29,7 +29,7 @@ async function initiateConnection(sequelizeInstance: Sequelize) {
 }
 
 class App implements ServerSetup {
-  public app = express();
+  private app = express();
   private sequelizeInstance?: Sequelize;
 
   constructor() {
@@ -68,7 +68,7 @@ class App implements ServerSetup {
   }
   injectDependency(): void {
     if (this.sequelizeInstance) {
-      const injector = new InjectSequelizeDependency(this.sequelizeInstance);
+      const injector = new SequelizeDependencyInjector(this.sequelizeInstance);
       injector.inject();
       // injector.defineAssosiations();
     }
@@ -77,6 +77,10 @@ class App implements ServerSetup {
   setupRoutes(): void {
     this.app.use(`/${API_ENDPOINT}/${API_VERSION}`, GenericRouter);
   }
+
+  getAppInstance(): typeof this.app {
+    return this.app;
+  }
 }
 
-export default new App().app;
+export default new App().getAppInstance();

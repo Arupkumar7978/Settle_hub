@@ -3,7 +3,7 @@ import { UserModelDefination } from './userModel';
 import { TransactionsModelDefination } from './transactionsModel';
 import { DebtsModelDefination } from './debtsModel';
 
-export class InjectSequelizeDependency {
+export class SequelizeDependencyInjector {
   private sequelizeInstance: Sequelize;
 
   constructor(instance: Sequelize) {
