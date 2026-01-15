@@ -1,19 +1,24 @@
-export const API_ENDPOINT = 'api';
-export const API_VERSION = 'v1';
-export const AUTHENTICATION = 'authentication';
+export const API_ENDPOINT = "api";
+export const API_VERSION = "v1";
+export const AUTHENTICATION = "authentication";
 
 export const ROUTES = {
-  USER: 'user',
-  TRANSACTION: 'transaction'
+  USER: "user",
+  TRANSACTION: "transaction",
 } as const;
 
 export const USER_AUTHENTICATION_ROUTES = {
-  SIGN_IN: 'signIn',
-  REGISTER: 'register'
+  SIGN_IN: "signIn",
+  REGISTER: "register",
+  LOG_OUT: "logOut",
+  FORGOT_PASSWORD: "forgotPassword",
+  RESET_PASSWORD: "resetPassword",
+  VERIFY_EMAIL: "verifyEmail",
+  
 } as const;
 
 export const USER_TRSANSACTION_ROUTES = {
-  CREATE: 'CREATE',
-  UPDATE: 'UPDATE',
-  DELETE: 'DELETE'
+  CREATE: "CREATE",
+  UPDATE: "UPDATE",
+  DELETE: "DELETE",
 } as const;

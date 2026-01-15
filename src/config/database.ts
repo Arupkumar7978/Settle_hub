@@ -1,5 +1,5 @@
-import { Sequelize, Dialect } from 'sequelize';
-import dotenv from 'dotenv';
+import { Sequelize, Dialect } from "sequelize";
+import dotenv from "dotenv";
 
 interface DatabaseSequelizer {
   getInstance(): Sequelize;
@@ -9,12 +9,11 @@ interface DatabaseSequelizer {
 dotenv.config();
 
 export default class DatabaseConnector implements DatabaseSequelizer {
-  private DB_NAME = process.env.DB_NAME || '';
-  private DB_USER = process.env.DB_USER || '';
-  private DB_HOST = process.env.DB_HOST || '';
-  private DB_PASSWORD = process.env.DB_PASSWORD || '';
-  private DB_DIALECT: Dialect =
-    (process.env.DB_DIALECT as Dialect) || 'mysql';
+  private DB_NAME = process.env.DB_NAME || "";
+  private DB_USER = process.env.DB_USER || "";
+  private DB_HOST = process.env.DB_HOST || "";
+  private DB_PASSWORD = process.env.DB_PASSWORD || "";
+  private DB_DIALECT: Dialect = (process.env.DB_DIALECT as Dialect) || "mysql";
 
   private static sequelizeInstance: Sequelize | undefined;
 
@@ -25,7 +24,11 @@ export default class DatabaseConnector implements DatabaseSequelizer {
       this.DB_PASSWORD,
       {
         host: this.DB_HOST,
-        dialect: this.DB_DIALECT
+        port: Number(process.env.DB_PORT),
+        dialect: this.DB_DIALECT,
+        dialectOptions: {
+          connectTimeout: 60000, // 60 seconds
+        },
       }
     );
     return DatabaseConnector.sequelizeInstance;

@@ -1,34 +1,33 @@
-import { Request, Response } from 'express';
-import JWT from 'jsonwebtoken';
-import { MODEL_CONSTANTS } from '../constants/entityConstants';
-import { ResponseBuilder } from '../helper/responseBuilder';
-import bcrypt from 'bcrypt';
+import { Request, Response } from "express";
+import JWT from "jsonwebtoken";
+import { MODEL_CONSTANTS } from "../constants/entityConstants";
+import { ResponseBuilder } from "../helper/responseBuilder";
+import bcrypt from "bcrypt";
 import {
   USER_EXITS,
   USER_CREATED,
   INTERNAL_SERVER_ERROR,
   USER_DOES_NOT_EXITS,
   PASSWORD_MISMATCH,
-  USER_LOGGEDIN
-} from '../constants/responseConstants';
-import dotenv from 'dotenv';
-import { ModelType } from '../models/types';
-import { ModelProvider } from '../helper/modelProvider';
+  USER_LOGGEDIN,
+} from "../constants/responseConstants";
+import dotenv from "dotenv";
+import { ModelType } from "../models/types";
+import { ModelProvider } from "../helper/modelProvider";
+import redis from "../config/redis";
 
 // Load .env properties
 dotenv.config();
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET as string;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
-const PASSWORD_SALT =
-  parseInt(process.env.PASSWORD_SALT ?? '10') || 10;
+const PASSWORD_SALT = parseInt(process.env.PASSWORD_SALT ?? "10") || 10;
 
 const { USER } = MODEL_CONSTANTS;
 
 const responseBuilder = new ResponseBuilder();
 
-const userModel: ModelType[typeof USER] =
-  new ModelProvider().getModel(USER);
+const userModel: ModelType[typeof USER] = new ModelProvider().getModel(USER);
 
 export async function AuthenticateUser(req: Request, res: Response) {
   try {
@@ -40,7 +39,7 @@ export async function AuthenticateUser(req: Request, res: Response) {
         .json(
           responseBuilder.buildFailureResponse(
             null,
-            USER_DOES_NOT_EXITS.replace('<email>', email),
+            USER_DOES_NOT_EXITS.replace("<email>", email),
             false,
             500
           )
@@ -62,17 +61,24 @@ export async function AuthenticateUser(req: Request, res: Response) {
       return;
     }
 
-    const { password: _, ...sanitisedUser } = user.toJSON();
+    const {
+      password: _,
+      isDeleted,
+      pkUserId,
+      updatedAt,
+      ...sanitisedUser
+    } = user.toJSON();
 
     const token = JWT.sign({ sanitisedUser }, JWT_SECRET_KEY, {
-      expiresIn: JWT_EXPIRES_IN
+      expiresIn: JWT_EXPIRES_IN,
     });
+    redis.setByKey(email, token).then(console.log).catch(console.error);
     res
       .status(200)
       .json(
         responseBuilder.buildSuccessResponse(
-          { user: sanitisedUser, token },
-          USER_LOGGEDIN.replace('<email>', email),
+          { token },
+          USER_LOGGEDIN.replace("<email>", email),
           true,
           200
         )
@@ -95,7 +101,8 @@ export async function AuthenticateUser(req: Request, res: Response) {
 export async function CreateNewUser(req: Request, res: Response) {
   try {
     const { name, email, userName, password } = req.body;
-
+    if (!name || !email || !userName || !password)
+      throw new Error("Parameters missing");
     // Encrypt user password
     const salt = bcrypt.genSaltSync(PASSWORD_SALT);
     const encrypted_password = bcrypt.hashSync(password, salt);
@@ -106,8 +113,8 @@ export async function CreateNewUser(req: Request, res: Response) {
         name,
         email,
         userName,
-        password: encrypted_password
-      }
+        password: encrypted_password,
+      },
     });
 
     // created -> false , if already exists with same mail address .
@@ -119,7 +126,7 @@ export async function CreateNewUser(req: Request, res: Response) {
         .json(
           responseBuilder.buildFailureResponse(
             { user: sanitisedUser },
-            USER_EXITS.replace('<email>', email),
+            USER_EXITS.replace("<email>", email),
             false,
             402
           )
@@ -128,20 +135,63 @@ export async function CreateNewUser(req: Request, res: Response) {
     }
 
     const token = JWT.sign({ sanitisedUser }, JWT_SECRET_KEY, {
-      expiresIn: JWT_EXPIRES_IN
+      expiresIn: JWT_EXPIRES_IN,
     });
     res
       .status(200)
       .json(
         responseBuilder.buildSuccessResponse(
           { user: sanitisedUser, token },
-          USER_CREATED.replace('<email>', email),
+          USER_CREATED.replace("<email>", email),
           true,
           200
         )
       );
   } catch (error) {
-    console.error('ERROR [METHOD :: CreateNewUser]: ', error);
+    console.error("ERROR [METHOD :: CreateNewUser]: ", error);
+    res
+      .status(500)
+      .json(
+        responseBuilder.buildFailureResponse(
+          null,
+          INTERNAL_SERVER_ERROR,
+          false,
+          500,
+          `${error}`
+        )
+      );
+  }
+}
+
+export async function LogoutUser(req: Request, res: Response) {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      res
+        .status(401)
+        .json(
+          responseBuilder.buildFailureResponse(
+            null,
+            "email not found",
+            false,
+            401
+          )
+        );
+      return;
+    }
+    redis.delByKey(email);
+    res
+      .status(200)
+      .json(
+        responseBuilder.buildSuccessResponse(
+          null,
+          "User logged out successfully",
+          true,
+          200
+        )
+      );
+  } catch (error) {
+    console.error("ERROR [METHOD :: LogoutUser]: ", error);
     res
       .status(500)
       .json(

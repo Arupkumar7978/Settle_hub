@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "expense tracker pwa webapp",
   "main": "server.js",
+  "type": "commonjs",
   "scripts": {
     "build": "npm i && tsc",
     "start": "set NODE_ENV=production && node dist/server.js",
@@ -21,6 +22,7 @@
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.11.3",
+    "redis": "^4.7.0",
     "sequelize": "^6.37.4"
   },
   "devDependencies": {
